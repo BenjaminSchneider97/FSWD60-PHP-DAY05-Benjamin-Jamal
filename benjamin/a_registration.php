@@ -1,24 +1,14 @@
 <?php
 
-	session_start();
-
 	require_once 'db_connection.php';
 
-	if (isset($_SESSION['admin'])){
-	$res=mysqli_query($mysqli, "SELECT * FROM `userdata` WHERE userdata_id=". $_SESSION['admin']. "");
-	$userRow=mysqli_fetch_array($res, MYSQLI_ASSOC);
-	}
-	
-	if(!isset($_SESSION['admin'])){
-		header("Location: login.php");
-	}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Home</title>
+	<title>Registration</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -43,36 +33,15 @@
 		</span>
 	</div>
 	<div class="container">
-		<h1 class="pageheader">Dashboard</h1>
+		<h1 class="pageheader">Registration</h1>
+		<a class="mainpageback" href="login.php"><i class="fas fa-arrow-left"></i> Back to the login page</a>
 		<hr>
-		<div class="centermepls">
-			<h2>Itemlist</h2>
+		<div class="successmessage">
+			<h3>Successfully created account!</h3>
 		</div>
-
-		<?php
-
-		$sql = mysqli_query($mysqli, "SELECT * FROM `items`");
-
-		$count = mysqli_num_rows($sql);
-
-		if($count > 0) {
-			while($ItemRow = mysqli_fetch_array($sql)){
-			echo 
-			'
-				<div id="'. $ItemRow['item_id']. '" class="item">
-					<p>'. $ItemRow['item_id']. ") ". $ItemRow['itemName']. '</p>
-				</div>
-			';
-			}
-		}
-		else{
-			echo 'No data available';
-		}
-
-		?>
 	</div>
-		<div class="footer">
-			<p>Benjamin Schneider - CodeFactory 2019</p>
-		</div>
+	<div class="footer">
+		<p>Benjamin Schneider - CodeFactory 2019</p>
+	</div>
 </body>
 </html>
