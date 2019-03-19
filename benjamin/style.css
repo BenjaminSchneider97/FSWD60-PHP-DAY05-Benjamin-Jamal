@@ -89,6 +89,18 @@ hr{
 	color: #333333;
 	margin: 10px 0;
 }
+.item{
+	height: 50px;
+	display: flex;
+	border-bottom: 1px solid #30336b;
+}
+.item p, .itembuttons{
+	margin: auto 0;
+}
+.itembuttons{
+	display: flex;
+	margin: auto 5px auto auto;
+}
 .footer{
 	position: absolute;
 	bottom: 0;
@@ -100,4 +112,10 @@ hr{
 .footer p{
 	color: #fff;
 	margin: auto;
+}
+.modal{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }

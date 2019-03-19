@@ -75,13 +75,13 @@
 		</span>
 	</div>
 	<div class="container">
-		<h1 class="pageheader">
 			<?php if(!isset($_SESSION['admin'])){
-				echo "Login";
+				echo "<h1 class='pageheader'>Login</h1>";
 			}
 				else{
-				echo "You are currently signed in, do you want to sign out?";
-				}	?></h1>
+				echo "<h1 class='pageheader'>You are currently signed in, do you want to sign out?</h1>
+				<a class='mainpageback' href='home.php'><i class='fas fa-arrow-left'></i> Back to the home page</a>";
+			} ?>
 		<hr>
 		<?php
 		if(!isset($_SESSION['admin'])){
