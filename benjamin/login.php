@@ -4,6 +4,10 @@
 
 	require_once 'db_connection.php';
 
+	if (isset($_SESSION['user'])){
+	$res=mysqli_query($mysqli, "SELECT * FROM `userdata` WHERE userdata_id=". $_SESSION['user']. "");
+	$userRow=mysqli_fetch_array($res, MYSQLI_ASSOC);
+	}
 	if (isset($_SESSION['admin'])){
 	$res=mysqli_query($mysqli, "SELECT * FROM `userdata` WHERE userdata_id=". $_SESSION['admin']. "");
 	$userRow=mysqli_fetch_array($res, MYSQLI_ASSOC);
@@ -25,22 +29,26 @@
 	 
 		$userPass = hash('sha256', $userPassword);
 
-		$res=mysqli_query($mysqli, "SELECT userdata_id, userFirstName, userLastName, userPassword FROM `userdata` WHERE userEmail='$userEmail'");
+		$res=mysqli_query($mysqli, "SELECT userdata_id, userFirstName, userLastName, userPassword, adminrole FROM `userdata` WHERE userEmail='$userEmail'");
 
 		$row=mysqli_fetch_array($res, MYSQLI_ASSOC);
 		$userRows = mysqli_num_rows($res);
 	 
-		if($userRows == 1 && $row['userPassword']==$userPass) {
-			$_SESSION['admin'] = $row['userdata_id'];
+	 	if($userRows == 1 && $row['userPassword']==$userPass && $row['adminrole']==='Y'){
+	 		$_SESSION['admin'] = $row['userdata_id'];
+	 		header("Location: home.php");
+	 	}
+	 	elseif($userRows == 1 && $row['userPassword']==$userPass && $row['adminrole']==='N') {
+			$_SESSION['user'] = $row['userdata_id'];
 			header("Location: home.php");
-			} else {
+		} else {
 				$loginError = "Incorrect email or password";
-	 		}
+	 	}
 		}
 	}
 
 	if(isset($_POST['logout'])){
-		unset($_SESSION['admin']);
+		unset($_SESSION['user']);
 		session_destroy();
 	}
 
@@ -63,9 +71,13 @@
 		<span class="navbar-login">
 			<a href="login.php" title="Login">
 			<?php
-				if (isset($_SESSION['admin'])) {
+				if (isset($_SESSION['user'])) {
 					$displayName = $userRow['userFirstName']. " ". $userRow['userLastName'][0]. ".";
 					echo '<i class="fas fa-sign-out-alt"></i> '. $displayName;
+				}
+				elseif (isset($_SESSION['admin'])) {
+					$displayName = $userRow['userFirstName']. " ". $userRow['userLastName'][0]. ".";
+					echo '<i class="fas fa-sign-out-alt"></i> '. $displayName. " ADMIN";
 				}	
 				else {
 					echo '<i class="fas fa-sign-in-alt"></i> Login';
@@ -75,16 +87,25 @@
 		</span>
 	</div>
 	<div class="container">
-			<?php if(!isset($_SESSION['admin'])){
-				echo "<h1 class='pageheader'>Login</h1>";
-			}
-				else{
+			<?php if(isset($_SESSION['user']) || isset($_SESSION['admin'])){
 				echo "<h1 class='pageheader'>You are currently signed in, do you want to sign out?</h1>
 				<a class='mainpageback' href='home.php'><i class='fas fa-arrow-left'></i> Back to the home page</a>";
+			}
+				else{
+				echo "<h1 class='pageheader'>Login</h1>";
 			} ?>
 		<hr>
 		<?php
-		if(!isset($_SESSION['admin'])){
+		if(isset($_SESSION['user']) || isset($_SESSION['admin'])){
+			echo '
+			<form method="POST">
+				<div class="centermepls">
+					<input class="btn btn-danger" type="submit" name="logout" value="Sign Out">
+				</div>
+			</form>
+			';
+		}
+		else{
 			echo'
 			<form class="loginform" method="post" accept-charset="utf-8">
 				<span>'?><?php echo $loginError ?></span><?php echo '
@@ -99,15 +120,8 @@
 				<input class="btn btn-success loginbutton" type="submit" name="login" value="Sign in">
 				<p>No account yet? <a class="createaccountlink" href="registration.php" title="Create account">Create one here!</a></p>
 			</form>
-		';}
-		else{
-			echo '
-			<form method="POST">
-				<div class="centermepls">
-					<input class="btn btn-danger" type="submit" name="logout" value="Sign Out">
-				</div>
-			</form>
-			';}
+		';
+		}
 		?>
 	</div>
 	<div class="footer">

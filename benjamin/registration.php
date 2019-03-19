@@ -2,12 +2,12 @@
 
 	session_start();
 
-	if(isset($_SESSION['admin'])){
+	if(isset($_SESSION['user'])){
 		header("Location: home.php");
 	}
 
-	if (isset($_SESSION['admin'])){
-	$res=mysqli_query($mysqli, "SELECT * FROM `userdata` WHERE userdata_id=". $_SESSION['admin']. "");
+	if (isset($_SESSION['user'])){
+	$res=mysqli_query($mysqli, "SELECT * FROM `userdata` WHERE userdata_id=". $_SESSION['user']. "");
 	$userRow=mysqli_fetch_array($res, MYSQLI_ASSOC);
 	}
 
@@ -70,7 +70,7 @@
 		<span class="navbar-login">
 			<a href="login.php" title="Login">
 			<?php
-				if (isset($_SESSION['admin'])) {
+				if (isset($_SESSION['user'])) {
 					$displayName = $userRow['userFirstName']. " ". $userRow['userLastName'][0]. ".";
 					echo '<i class="fas fa-sign-out-alt"></i> '. $displayName;
 				}	

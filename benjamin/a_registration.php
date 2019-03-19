@@ -21,7 +21,7 @@
 		<span class="navbar-login">
 			<a href="login.php" title="Login">
 			<?php
-				if (isset($_SESSION['admin'])) {
+				if (isset($_SESSION['user'])) {
 					$displayName = $userRow['userFirstName']. " ". $userRow['userLastName'][0]. ".";
 					echo '<i class="fas fa-sign-out-alt"></i> '. $displayName;
 				}	
